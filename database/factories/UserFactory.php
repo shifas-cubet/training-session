@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -16,6 +17,9 @@ class UserFactory extends Factory
      */
     protected static ?string $password;
 
+    protected $model = User::class;
+
+
     /**
      * Define the model's default state.
      *
@@ -23,9 +27,18 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $genders = ['male', 'female'];
+        $hireDate = fake()->dateTimeBetween('2010-01-01', '2023-11-30');
+
+        $dob = fake()->dateTimeBetween('1985-01-01', '2002-11-30');
+
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
+            'phone' => fake()->phoneNumber(),
+            'address' => fake()->address(),
+            'date_of_birth' => $dob,
+            'gender' => $genders[array_rand($genders)],
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),

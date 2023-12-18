@@ -21,6 +21,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
+        'address',
+        'date_of_birth',
+        'gender',
+        'email_verified_at'
     ];
 
     /**
@@ -42,4 +47,22 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function wishlists()
+    {
+        return $this->hasMany(WishList::class);
+    }
+
+    public function wishlistItems()
+    {
+        return $this->hasManyThrough(WishListItem::class, Wishlist::class);
+    }
+
+    /**
+     * Define a one-to-many relationship with orders.
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }
