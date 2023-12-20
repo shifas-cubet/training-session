@@ -7,12 +7,41 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
     public function totalSpending(Request $request)
     {
+        // Generate a unique cache key based on the query parameters
+        $cacheKey = 'product_details_' . 1;
+
+        // Define the cache tags
+        $cacheTags = ['product_details'];
+
+// Attempt to retrieve the product details from the cache
+        $product = Cache::tags($cacheTags)->get($cacheKey);
+
+
+        return $product;
+
+// Get the product with ID 1 from the database
+        $product = Product::query()->find(1);
+
+// Generate a unique cache key based on the query parameters
+        $cacheKey = 'product_details_' . $product->id;
+
+// Define the cache tags
+        $cacheTags = ['product_details'];
+
+// Retrieve the product details from cache using tags, or execute the query and cache the results
+        $product = Cache::tags($cacheTags)->remember($cacheKey, 120, function () use ($product) {
+            return Product::with('category')->get();
+        });
+
+        return $product;
+
         // User spent most on category Electornics
 
         $electronicsCatId = 1;

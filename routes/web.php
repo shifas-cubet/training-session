@@ -13,16 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+//Route::get('/', function () {
+//    return view('welcome');
+//});
 
-
-    $userId = 1; // Replace with the desired user ID
-    $minTotalAmount = 100; // Set the minimum total amount threshold
-
-    $userWithFilteredOrders = \App\Models\User::with(['orders' => function ($query) use ($minTotalAmount) {
-        $query->where('total_amount', '>', $minTotalAmount);
-    }])
-        ->find($userId);
-
-    return view('welcome');
-});
+Route::get('/app', [\App\Http\Controllers\HomeController::class, 'index']);
+//Route::get('/about', [PagesController::class, 'about']);
